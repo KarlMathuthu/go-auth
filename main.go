@@ -1,21 +1,21 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/go-auth/config"
+	"github.com/go-auth/controllers"
 )
 
-func main()  {
+func main() {
+    config.ConnectDB()
 
-	app := gin.Default()
+    r := gin.Default()
 
-	// routes.
-	app.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-		  "message": "pong",
-		})
-	  })
+    authRoutes := r.Group("/auth")
+    {
+        authRoutes.POST("/register", controllers.Register)
+        authRoutes.POST("/login", controllers.Login)
+    }
 
-	app.Run(":8090")
+    r.Run(":8080") // Runs on port 8080
 }
